@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}AI Chat Tutor{% endblock %}
+
+{% block content %}
+<div class="card p-4 position-relative">
+
+  <!-- Floating Timer in Top Right -->
+  <div id="chat-timer"
+       style="position: absolute; top: 15px; right: 20px; background: #212529; color: #fff; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 14px; z-index: 1;">
+    ⏱ Time: <span id="time-spent">00:00:00</span>
+  </div>
+
+  <!-- Chat Heading -->
+  <h4 class="mb-4">💬 Ask AI about your topic</h4>
+
+  <!-- Chat Box -->
+  <div id="chat-box"
+       style="height: 350px; overflow-y: auto; background: #4a4a6a; padding: 15px; border-radius: 10px; color: #e0e0e0; margin-bottom: 20px; border: 1px solid #6a6a8a;">
+  </div>
+
+  <!-- Chat Input -->
+  <div class="input-group mb-4">
+    <input type="text" id="user-msg" class="form-control" placeholder="Type your question here..." autocomplete="off" />
+    <button id="send-btn" class="btn btn-primary">Send</button>
+  </div>
+
+  <!-- Submit Form -->
+  <form id="doneForm" action="/final_quiz" method="POST">
+    <input type="hidden" name="chat_time" id="chatTimeField" />
+    <div class="text-center">
+      <button type="submit" class="btn btn-success btn-lg">✅ Done Learning – Take Final Quiz</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const chatBox = document.getElementById("chat-box");
+  const input = document.getElementById("user-msg");
+  const sendBtn = document.getElementById("send-btn");
+
+  // Scroll to bottom of chat
+  const scrollToBottom = () => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  // Timer Logic
+  let seconds = 0;
+  setInterval(() => {
+    seconds++;
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    document.getElementById("time-spent").textContent = `${hrs}:${mins}:${secs}`;
+  }, 1000);
+
+  // Chat Send Button
+  sendBtn.onclick = async () => {
+    const msg = input.value.trim();
+    if (!msg) return;
+    chatBox.innerHTML += `<div class="mb-2"><b>You:</b> ${msg}</div>`;
+    input.value = "";
+    scrollToBottom();
+
+    try {
+      const res = await fetch("/chat_api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+      const data = await res.json();
+      chatBox.innerHTML += `<div class="mb-2"><b>AI:</b> ${data.response}</div>`;
+      scrollToBottom();
+    } catch {
+      chatBox.innerHTML += `<div class="mb-2 text-danger"><b>Error:</b> Could not reach server.</div>`;
+      scrollToBottom();
+    }
+  };
+
+  // Enter = Send
+  input.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendBtn.click();
+    }
+  });
+
+  // Capture Timer on Form Submit
+  document.getElementById("doneForm").addEventListener("submit", function () {
+    document.getElementById("chatTimeField").value = seconds;
+  });
+</script>
+{% endblock %}

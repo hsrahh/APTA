@@ -1,0 +1,191 @@
+{
+  "Python basic": [
+    {
+      "question": "What is the correct syntax to print in Python?",
+      "options": ["echo", "print()", "printf()"],
+      "answer": "print()"
+    },
+    {
+      "question": "Which symbol is used for comments in Python?",
+      "options": ["#", "//", "--"],
+      "answer": "#"
+    },
+    {
+      "question": "What is the type of 'Hello'?",
+      "options": ["int", "str", "bool"],
+      "answer": "str"
+    },
+    {
+      "question": "What is used to define a function?",
+      "options": ["func", "define", "def"],
+      "answer": "def"
+    },
+    {
+      "question": "Which one is a valid variable name?",
+      "options": ["1name", "name_1", "name-1"],
+      "answer": "name_1"
+    }
+  ],
+  "Loops in Python": [
+    {
+      "question": "Which loop iterates over a sequence?",
+      "options": ["while", "for", "repeat"],
+      "answer": "for"
+    },
+    {
+      "question": "Which keyword breaks a loop?",
+      "options": ["stop", "exit", "break"],
+      "answer": "break"
+    },
+    {
+      "question": "What does 'continue' do in a loop?",
+      "options": ["Ends loop", "Skips to next", "Repeats loop"],
+      "answer": "Skips to next"
+    },
+    {
+      "question": "Which function is used with for loops?",
+      "options": ["len()", "range()", "input()"],
+      "answer": "range()"
+    },
+    {
+      "question": "What type of loop checks the condition first?",
+      "options": ["for", "do-while", "while"],
+      "answer": "while"
+    }
+  ],
+  "Functions": [
+    {
+      "question": "What is used to declare a function in Python?",
+      "options": ["function", "def", "func"],
+      "answer": "def"
+    },
+    {
+      "question": "What keyword returns a value from a function?",
+      "options": ["send", "give", "return"],
+      "answer": "return"
+    },
+    {
+      "question": "What do you call a function inside a class?",
+      "options": ["method", "loop", "module"],
+      "answer": "method"
+    },
+    {
+      "question": "Which symbol is used to call a function?",
+      "options": ["()", "[]", "{}"],
+      "answer": "()"
+    },
+    {
+      "question": "Can a function return multiple values?",
+      "options": ["Yes", "No", "Sometimes"],
+      "answer": "Yes"
+    }
+  ],
+  "Data structures": [
+    {
+      "question": "Which of these is a mutable data structure?",
+      "options": ["tuple", "list", "str"],
+      "answer": "list"
+    },
+    {
+      "question": "Which data structure uses key-value pairs?",
+      "options": ["list", "set", "dictionary"],
+      "answer": "dictionary"
+    },
+    {
+      "question": "What is the output of len({1,2,3})?",
+      "options": ["3", "1", "Error"],
+      "answer": "3"
+    },
+    {
+      "question": "Which of these supports indexing?",
+      "options": ["set", "list", "dict"],
+      "answer": "list"
+    },
+    {
+      "question": "Which data structure does not allow duplicates?",
+      "options": ["list", "set", "tuple"],
+      "answer": "set"
+    }
+  ],
+  "conditional Statement": [
+    {
+      "question": "Which keyword starts a conditional block?",
+      "options": ["if", "when", "switch"],
+      "answer": "if"
+    },
+    {
+      "question": "Which keyword handles the alternative condition?",
+      "options": ["alt", "else", "case"],
+      "answer": "else"
+    },
+    {
+      "question": "How do you check equality in Python?",
+      "options": ["=", "==", "equal"],
+      "answer": "=="
+    },
+    {
+      "question": "Which statement checks multiple conditions?",
+      "options": ["if-elif-else", "if-then", "switch-case"],
+      "answer": "if-elif-else"
+    },
+    {
+      "question": "What type is returned by a comparison expression?",
+      "options": ["bool", "int", "str"],
+      "answer": "bool"
+    }
+  ],
+  "OOPs": [
+    {
+      "question": "What does OOP stand for?",
+      "options": ["Object Oriented Programming", "Operational Output Program", "Object Output Processing"],
+      "answer": "Object Oriented Programming"
+    },
+    {
+      "question": "Which keyword defines a class?",
+      "options": ["def", "function", "class"],
+      "answer": "class"
+    },
+    {
+      "question": "What is 'self' used for?",
+      "options": ["Access object data", "Loop variable", "Memory location"],
+      "answer": "Access object data"
+    },
+    {
+      "question": "Which principle allows reuse of code via inheritance?",
+      "options": ["Encapsulation", "Polymorphism", "Inheritance"],
+      "answer": "Inheritance"
+    },
+    {
+      "question": "Which principle hides internal details?",
+      "options": ["Abstraction", "Inheritance", "Polymorphism"],
+      "answer": "Abstraction"
+    }
+  ],
+  "File operations": [
+    {
+      "question": "Which function opens a file?",
+      "options": ["read()", "open()", "file()"],
+      "answer": "open()"
+    },
+    {
+      "question": "Which mode is used to read a file?",
+      "options": ["w", "r", "a"],
+      "answer": "r"
+    },
+    {
+      "question": "What method reads the entire file?",
+      "options": ["read()", "readline()", "readlines()"],
+      "answer": "read()"
+    },
+    {
+      "question": "How do you close a file?",
+      "options": ["stop()", "close()", "end()"],
+      "answer": "close()"
+    },
+    {
+      "question": "What is the correct way to write to a file?",
+      "options": ["file.write()", "write()", "open.write()"],
+      "answer": "file.write()"
+    }
+  ]
+}

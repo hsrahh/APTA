@@ -1,0 +1,17 @@
+```
+{% extends 'base.html' %}
+{% block title %}Write What You Learned{% endblock %}
+{% block content %}
+<div class="card p-4">
+  <h4>📝 Write What You Understood</h4>
+  <form method="post">
+    <div class="mb-4">
+      <textarea name="explanation" rows="8" class="form-control form-control-lg" placeholder="Explain in your own words what you learned from the quiz and chat session..." required></textarea>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn btn-primary btn-lg">Continue</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+```

@@ -1,0 +1,38 @@
+```
+{% extends 'base.html' %}
+{% block title %}User Info{% endblock %}
+{% block content %}
+<div class="card p-4 mx-auto">
+  <h3 class="text-center">👤 Enter Your Details</h3>
+  <form method="post" class="mt-4">
+    <div class="mb-3">
+      <input name="ref_id" class="form-control form-control-lg" placeholder="Reference ID" required>
+    </div>
+    <div class="mb-3">
+      <input name="name" class="form-control form-control-lg" placeholder="Your Name" required>
+    </div>
+    <div class="mb-3">
+      <select name="gender" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <input name="age" type="number" min="18" max="27" class="form-control form-control-lg" placeholder="Age (18-27)" required>
+    </div>
+    <div class="mb-4">
+      <select name="profession" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Select Profession</option>
+        <option value="student">Student</option>
+        <option value="IT employee">IT Employee</option>
+        <option value="finance employee">Finance Employee</option>
+        <option value="freelancer">Freelancer</option>
+        <option value="software developer">Software Developer</option>
+      </select>
+    </div>
+    <button class="btn btn-primary w-100 btn-lg">Next</button>
+  </form>
+</div>
+{% endblock %}
+```

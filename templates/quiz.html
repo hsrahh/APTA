@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Quiz - {{ topic }}{% endblock %}
+{% block content %}
+<div class="card p-4">
+  <h4>🧪 Quiz: {{ topic }}</h4>
+
+  <!-- Main Quiz Form (not submitted to server initially) -->
+  <form id="quizForm">
+    {% for q in questions %}
+    {% set question_index = loop.index0 %}
+    <div class="mb-4 p-3 rounded" style="background-color: #c0c0e0; border: 1px solid #a0a0d0;">
+      <label class="form-label mb-2"><strong>{{ loop.index }}. {{ q.question }}</strong></label>
+      {% for opt in q.options %}
+      {% set option_index = loop.index0 %}
+      <div class="form-check mb-1">
+        <input class="form-check-input"
+               type="radio"
+               name="q{{ question_index }}"
+               id="q{{ question_index }}-opt{{ option_index }}"
+               value="{{ opt }}"
+               required>
+        <label class="form-check-label" for="q{{ question_index }}-opt{{ option_index }}">
+          {{ opt }}
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="text-center mt-4">
+      <button type="button" class="btn btn-primary btn-lg" onclick="calculateAndShowScore()">Submit Quiz</button>
+    </div>
+  </form>
+
+  <!-- Score Display -->
+  <div id="scoreDisplay" class="mt-4 alert alert-info text-center" style="display: none;">
+    🎯 You scored <strong><span id="score"></span></strong> out of {{ questions|length }}.<br>
+    <button class="btn btn-success mt-3" onclick="submitToBackend()">Next</button>
+  </div>
+
+  <!-- Hidden form to actually POST to server -->
+  <form id="backendForm" method="post" action="{{ url_for('quiz') }}" style="display: none;">
+    {% for q in questions %}
+    {% set question_index = loop.index0 %}
+    <input type="hidden" name="q{{ question_index }}" id="hidden-q{{ question_index }}">
+    {% endfor %}
+  </form>
+</div>
+
+<script>
+  const correctAnswers = [
+    {% for q in questions %}
+      `{{ q.answer }}`{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  function calculateAndShowScore() {
+    let score = 0;
+    const total = correctAnswers.length;
+
+    for (let i = 0; i < total; i++) {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      if (selected) {
+        // Fill hidden input for backend
+        document.getElementById(`hidden-q${i}`).value = selected.value;
+        if (selected.value === correctAnswers[i]) {
+          score++;
+        }
+      }
+    }
+
+    document.getElementById('score').textContent = score;
+    document.getElementById('scoreDisplay').style.display = 'block';
+    window.scrollTo({ top: document.getElementById('scoreDisplay').offsetTop - 20, behavior: 'smooth' });
+  }
+
+  function submitToBackend() {
+    document.getElementById('backendForm').submit();
+  }
+</script>
+{% endblock %}

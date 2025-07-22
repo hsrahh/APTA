@@ -1,0 +1,21 @@
+```
+{% extends 'base.html' %}
+{% block title %}Select Topic{% endblock %}
+{% block content %}
+<div class="card p-4 mx-auto">
+  <h3 class="text-center">📘 Select a Topic to Learn</h3>
+  <form method="post" class="mt-4">
+    <div class="mb-4">
+      <label for="topicSelect" class="form-label visually-hidden">Select Topic</label>
+      <select name="topic" id="topicSelect" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Choose a topic...</option>
+        {% for topic in topics %}
+          <option value="{{ topic }}">{{ topic }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-primary w-100 btn-lg">Start Quiz</button>
+  </form>
+</div>
+{% endblock %}
+```

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Performance Dashboard{% endblock %}
+{% block content %}
+<div class="card p-4">
+  <h4 class="text-center">📊 Your Performance Summary</h4>
+
+  <ul class="list-group list-group-flush mt-4">
+    <li class="list-group-item"><strong>Name:</strong> {{ name }}</li>
+    <li class="list-group-item"><strong>Topic:</strong> {{ topic }}</li>
+    <li class="list-group-item"><strong>Initial Quiz Score:</strong> <span class="badge bg-primary">{{ pre }}/5</span></li>
+    <li class="list-group-item"><strong>Time Spent Learning:</strong> <span class="badge bg-info">{{ time_spent_display }}</span></li>
+    <li class="list-group-item"><strong>Final Quiz Score:</strong> <span class="badge bg-success">{{ final }}/5</span></li>
+    <li class="list-group-item"><strong>Your Explanation:</strong><br>
+      <p class="mt-2 p-2 rounded" style="background-color: #c0c0e0; color: #212529;">{{ explanation }}</p>
+    </li>
+  </ul>
+
+  <!-- Performance Chart -->
+  <div class="mt-5">
+    <canvas id="performanceChart" height="120"></canvas>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-primary btn-lg">Restart Learning</a>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const preScore = {{ pre }};
+  const finalScore = {{ final }};
+  const timeSpent = {{ time_spent }};  // in minutes
+
+  let performanceLabel = '';
+  if (timeSpent >= 30 && finalScore >= preScore) {
+    performanceLabel = 'Positive';
+  } else if (timeSpent >= 15 && timeSpent < 30) {
+    performanceLabel = 'Neutral';
+  } else {
+    performanceLabel = 'Negative';
+  }
+
+  const ctx = document.getElementById('performanceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Initial Score', 'Final Score', 'Time Spent (min)'],
+      datasets: [{
+        label: 'Your Performance',
+        data: [preScore, finalScore, timeSpent],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)'
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: '📈 Learning Trend: ' + performanceLabel,
+          font: { size: 18 }
+        },
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: 5
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
