@@ -31,11 +31,13 @@ An AI-powered personalized tutor application designed to assess a student's know
 | Component      | Technology               |
 |----------------|--------------------------|
 | Frontend       | HTML, CSS, JavaScript    |
-| Backend        | Python (Flask / Streamlit)|
+| Backend        | Python (Flask)           |
 | AI Integration | OpenAI GPT (via API)     |
-| Database       | SQLite / MongoDB         |
+| Database       | SQLite                   |
 | ML Model       | Random Forest Classifier |
-| Dashboard      | Streamlit / Power BI     |
+|                | Decision tree , Linear   |
+|                |  Regression , SVM        |
+| Dashboard      | Power BI                 |
 
 ## 📊 Machine Learning Model
 
@@ -66,7 +68,6 @@ The dashboard shows:
 
 ### Built with:
 
-* 📍 **Streamlit** (Interactive Web UI)
 * 📍 **Matplotlib / Seaborn** (Visualizations)
 * 📍 **Pandas** (Data Processing)
 
@@ -75,13 +76,13 @@ The dashboard shows:
 ```bash
 AI-Tutor/
 │
-├── static/                     # Static assets (CSS, JS)
-├── templates/                  # HTML templates (if Flask)
-├── app.py                      # Main backend
-├── ai_chat_module.py           # OpenAI integration logic
-├── ml_model.py                 # Model training & prediction
-├── dashboard.py                # Streamlit dashboard
-├── student_learning_data.csv   # Collected student data
+├── data/                       # Data fetch from App an storage
+├── templates/                  # HTML templates(with css and javascripts)
+├── app.py                      # Backend (flask)
+├── build_knowledge.py
+├── vector_store.py                   
+├── Model Prediction.ipynb      # Model training & prediction
+├── APTA_Dashboard.pbix         # Power BI dashboard
 └── README.md                   # Project overview
 
 
