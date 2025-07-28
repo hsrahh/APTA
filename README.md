@@ -1,4 +1,3 @@
-````markdown
 # 🧠 AI Personal Tutor
 
 An AI-powered personalized tutor application designed to assess a student's knowledge, provide customized learning, and measure improvement using quizzes, interactive explanations, and machine learning analysis.
@@ -84,5 +83,5 @@ AI-Tutor/
 ├── dashboard.py                # Streamlit dashboard
 ├── student_learning_data.csv   # Collected student data
 └── README.md                   # Project overview
-```
+
 
