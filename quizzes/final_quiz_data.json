@@ -1,0 +1,191 @@
+{
+  "Python basic": [
+    {
+      "question": "What is the output of print(type(3.14))?",
+      "options": ["<class 'int'>", "<class 'float'>", "<class 'number'>"],
+      "answer": "<class 'float'>"
+    },
+    {
+      "question": "Which method converts a string to uppercase?",
+      "options": ["upper()", "uppercase()", "toUpper()"],
+      "answer": "upper()"
+    },
+    {
+      "question": "What is the result of 5 // 2?",
+      "options": ["2.5", "2", "2.0"],
+      "answer": "2"
+    },
+    {
+      "question": "Which function converts a string to an integer?",
+      "options": ["str()", "int()", "float()"],
+      "answer": "int()"
+    },
+    {
+      "question": "What is the correct way to create a multi-line string?",
+      "options": ["Using \\n", "Using triple quotes", "Using multiple print statements"],
+      "answer": "Using triple quotes"
+    }
+  ],
+  "Loops in Python": [
+    {
+      "question": "What is the output of: for i in range(3): print(i)?",
+      "options": ["0 1 2", "1 2 3", "3"],
+      "answer": "0 1 2"
+    },
+    {
+      "question": "Which loop is best for iterating through a list?",
+      "options": ["while loop", "for loop", "do-while loop"],
+      "answer": "for loop"
+    },
+    {
+      "question": "What does enumerate() do in a for loop?",
+      "options": ["Counts elements", "Returns index and value", "Sorts the list"],
+      "answer": "Returns index and value"
+    },
+    {
+      "question": "How do you create an infinite loop?",
+      "options": ["while True:", "for i in infinity:", "loop forever:"],
+      "answer": "while True:"
+    },
+    {
+      "question": "What is the output of: [x*2 for x in [1,2,3]]?",
+      "options": ["[2,4,6]", "[1,2,3]", "[1,4,9]"],
+      "answer": "[2,4,6]"
+    }
+  ],
+  "Functions": [
+    {
+      "question": "What is a lambda function?",
+      "options": ["A named function", "An anonymous function", "A built-in function"],
+      "answer": "An anonymous function"
+    },
+    {
+      "question": "What is the output of: def func(x, y=10): return x+y; print(func(5))?",
+      "options": ["15", "Error", "5"],
+      "answer": "15"
+    },
+    {
+      "question": "Which keyword is used for variable arguments?",
+      "options": ["*args", "**kwargs", "Both"],
+      "answer": "Both"
+    },
+    {
+      "question": "What is recursion?",
+      "options": ["A function calling itself", "A loop", "A variable"],
+      "answer": "A function calling itself"
+    },
+    {
+      "question": "What is the scope of a variable defined inside a function?",
+      "options": ["Global", "Local", "Both"],
+      "answer": "Local"
+    }
+  ],
+  "Data structures": [
+    {
+      "question": "What is the difference between a list and a tuple?",
+      "options": ["Lists are mutable, tuples are immutable", "Tuples are faster", "Lists can only contain numbers"],
+      "answer": "Lists are mutable, tuples are immutable"
+    },
+    {
+      "question": "How do you add an element to a set?",
+      "options": ["add()", "append()", "insert()"],
+      "answer": "add()"
+    },
+    {
+      "question": "What is the output of: {'a': 1, 'b': 2}.get('c', 3)?",
+      "options": ["Error", "3", "None"],
+      "answer": "3"
+    },
+    {
+      "question": "Which method removes an element from a list by value?",
+      "options": ["remove()", "delete()", "pop()"],
+      "answer": "remove()"
+    },
+    {
+      "question": "What is a frozen set?",
+      "options": ["An immutable set", "A set with no elements", "A sorted set"],
+      "answer": "An immutable set"
+    }
+  ],
+  "conditional Statement": [
+    {
+      "question": "What is the output of: x = 5; print('Yes' if x > 3 else 'No')?",
+      "options": ["Yes", "No", "Error"],
+      "answer": "Yes"
+    },
+    {
+      "question": "Which operator has the highest precedence?",
+      "options": ["and", "or", "not"],
+      "answer": "not"
+    },
+    {
+      "question": "What is the output of: bool(0)?",
+      "options": ["True", "False", "Error"],
+      "answer": "False"
+    },
+    {
+      "question": "How do you check if a value is in a list?",
+      "options": ["in operator", "contains() method", "find() method"],
+      "answer": "in operator"
+    },
+    {
+      "question": "What is the output of: 1 <= 2 <= 3?",
+      "options": ["True", "False", "Error"],
+      "answer": "True"
+    }
+  ],
+  "OOPs": [
+    {
+      "question": "What is the __init__ method called?",
+      "options": ["Constructor", "Destructor", "Method"],
+      "answer": "Constructor"
+    },
+    {
+      "question": "What is inheritance?",
+      "options": ["Creating a new class", "Reusing code from another class", "Destroying objects"],
+      "answer": "Reusing code from another class"
+    },
+    {
+      "question": "What is polymorphism?",
+      "options": ["Multiple forms", "Single form", "No form"],
+      "answer": "Multiple forms"
+    },
+    {
+      "question": "What is encapsulation?",
+      "options": ["Bundling data and methods", "Inheriting from parent", "Creating objects"],
+      "answer": "Bundling data and methods"
+    },
+    {
+      "question": "What is the output of: class A: pass; a = A(); print(type(a))?",
+      "options": ["<class 'A'>", "<class 'object'>", "<class 'type'>"],
+      "answer": "<class 'A'>"
+    }
+  ],
+  "File operations": [
+    {
+      "question": "What is the difference between 'r' and 'r+' modes?",
+      "options": ["r+ allows writing", "r is faster", "No difference"],
+      "answer": "r+ allows writing"
+    },
+    {
+      "question": "What does 'with' statement do?",
+      "options": ["Automatically closes file", "Opens file", "Reads file"],
+      "answer": "Automatically closes file"
+    },
+    {
+      "question": "What is the output of: with open('test.txt', 'w') as f: f.write('Hello'); print(f.closed)?",
+      "options": ["True", "False", "Error"],
+      "answer": "True"
+    },
+    {
+      "question": "Which method reads one line at a time?",
+      "options": ["read()", "readline()", "readlines()"],
+      "answer": "readline()"
+    },
+    {
+      "question": "What is the purpose of 'a' mode in file opening?",
+      "options": ["Append to file", "Read file", "Write file"],
+      "answer": "Append to file"
+    }
+  ]
+} 

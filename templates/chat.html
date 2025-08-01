@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}AI Python Tutor - Chat{% endblock %}
+
+{% block content %}
+<div class="glass-card position-relative">
+  <!-- Floating Timer -->
+  <div id="chat-timer" style="position: absolute; top: 20px; right: 20px; background: rgba(0, 0, 0, 0.3); color: white; padding: 10px 15px; border-radius: 15px; font-weight: 600; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+    <i class="fas fa-clock"></i> Time: <span id="time-spent">00:00:00</span>
+  </div>
+
+  <!-- Chat Header -->
+  <div class="text-center mb-4">
+    <i class="fas fa-robot" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
+    <h1 class="page-title">AI Personal Tutor</h1>
+    <p class="page-subtitle">Ask me anything!</p>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chat-box">
+    <div class="chat-message bot">
+      <div class="message-bubble bot">
+        <i class="fas fa-robot" style="margin-right: 8px;"></i>
+        Hello! I'm your AI Personal tutor. Ask me any questions about programming, and I'll help you learn! 🐍✨
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input -->
+  <div class="input-group mb-4">
+    <input type="text" id="user-msg" class="form-control" placeholder="Type your question here..." autocomplete="off" />
+    <button id="send-btn" class="btn btn-primary">
+      <i class="fas fa-paper-plane"></i> Send
+    </button>
+  </div>
+
+  <!-- Done Button -->
+  <form id="doneForm" action="/final_quiz" method="POST">
+    <input type="hidden" name="chat_time" id="chatTimeField" />
+    <div class="text-center">
+      <button type="submit" class="btn btn-success btn-lg">
+        <i class="fas fa-check-circle"></i> Done Learning – Take Final Quiz
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const chatBox = document.getElementById("chat-box");
+  const input = document.getElementById("user-msg");
+  const sendBtn = document.getElementById("send-btn");
+
+  // Scroll to bottom of chat
+  const scrollToBottom = () => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  // Timer Logic
+  let seconds = 0;
+  setInterval(() => {
+    seconds++;
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    document.getElementById("time-spent").textContent = `${hrs}:${mins}:${secs}`;
+  }, 1000);
+
+  // Add message to chat
+  function addMessage(message, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
+    
+    const bubbleDiv = document.createElement('div');
+    bubbleDiv.className = `message-bubble ${isUser ? 'user' : 'bot'}`;
+    
+    if (isUser) {
+      bubbleDiv.innerHTML = `<i class="fas fa-user" style="margin-right: 8px;"></i>${message}`;
+    } else {
+      bubbleDiv.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i>${message}`;
+    }
+    
+    messageDiv.appendChild(bubbleDiv);
+    chatBox.appendChild(messageDiv);
+    scrollToBottom();
+  }
+
+  // Chat Send Button
+  sendBtn.onclick = async () => {
+    const msg = input.value.trim();
+    if (!msg) return;
+    
+    addMessage(msg, true);
+    input.value = "";
+    
+    // Show loading indicator
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'chat-message bot';
+    loadingDiv.innerHTML = '<div class="message-bubble bot"><div class="loading"></div> AI is thinking...</div>';
+    chatBox.appendChild(loadingDiv);
+    scrollToBottom();
+
+    try {
+      const res = await fetch("/chat_api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+      const data = await res.json();
+      
+      // Remove loading indicator
+      chatBox.removeChild(loadingDiv);
+      
+      // Add AI response
+      addMessage(data.response, false);
+    } catch (error) {
+      // Remove loading indicator
+      chatBox.removeChild(loadingDiv);
+      
+      // Add error message
+      addMessage("Sorry, I'm having trouble connecting right now. Please try again!", false);
+    }
+  };
+
+  // Enter = Send
+  input.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendBtn.click();
+    }
+  });
+
+  // Capture Timer on Form Submit
+  document.getElementById("doneForm").addEventListener("submit", function () {
+    document.getElementById("chatTimeField").value = seconds;
+  });
+
+  // Focus on input when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    input.focus();
+  });
+</script>
+{% endblock %}

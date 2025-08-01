@@ -1,0 +1,52 @@
+```
+{% extends 'base.html' %}
+{% block title %}Reflect on Your Learning - AI Python Tutor{% endblock %}
+{% block content %}
+<div class="glass-card">
+  <div class="text-center mb-4">
+    <i class="fas fa-lightbulb" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
+    <h1 class="page-title">Reflect on Your Learning</h1>
+    <p class="page-subtitle">Take a moment to write down what you've learned and understood</p>
+  </div>
+  
+  <form method="post">
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-pen"></i> Your Learning Reflection
+      </label>
+      <textarea 
+        name="explanation" 
+        rows="8" 
+        class="form-control" 
+        placeholder="Explain in your own words what you learned from the quiz and what concepts you understand now. Be as detailed as possible..."
+        required
+        style="resize: vertical; min-height: 200px;"
+      ></textarea>
+    </div>
+    
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary btn-lg">
+        <i class="fas fa-arrow-right"></i> Continue to AI Tutor
+      </button>
+    </div>
+  </form>
+  
+  <div class="mt-4 text-center">
+    <div class="row">
+      <div class="col-md-4">
+        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">Pre-Assessment Complete</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-pen" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">Reflection</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-comments" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">AI Tutoring</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+```

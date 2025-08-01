@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Learning Results Dashboard - AI Python Tutor{% endblock %}
+{% block content %}
+<div class="glass-card">
+  <div class="text-center mb-4">
+    <i class="fas fa-chart-bar" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
+    <h1 class="page-title">Your Learning Results</h1>
+    <p class="page-subtitle">Congratulations on completing your learning journey!</p>
+  </div>
+
+  <!-- Performance Summary Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3">
+      <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 20px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <i class="fas fa-user" style="font-size: 2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 10px;"></i>
+        <h5 style="color: #000; margin-bottom: 5px;">Student</h5>
+        <p style="color: #333; font-size: 1.1rem;">{{ name }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 20px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <i class="fas fa-book" style="font-size: 2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 10px;"></i>
+        <h5 style="color: #000; margin-bottom: 5px;">Topic Studied</h5>
+        <p style="color: #333; font-size: 1.1rem;">{{ topic }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 20px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <i class="fas fa-clock" style="font-size: 2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 10px;"></i>
+        <h5 style="color: #000; margin-bottom: 5px;">Time Spent</h5>
+        <p style="color: #333; font-size: 1.1rem;">{{ time_spent_display }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score Comparison -->
+  <div class="row mb-4">
+    <div class="col-md-6 mb-3">
+      <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <i class="fas fa-clipboard-check" style="font-size: 3rem; color: #667eea; margin-bottom: 15px;"></i>
+        <h4 style="color: #000; margin-bottom: 10px;">Pre-Assessment</h4>
+        <div style="font-size: 2.5rem; color: #667eea; font-weight: bold;">{{ pre }}/5</div>
+        <div class="progress mt-3" style="height: 10px;">
+          <div class="progress-bar" style="width: {{ (pre / 5) * 100 }}%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <i class="fas fa-trophy" style="font-size: 3rem; color: #ffd700; margin-bottom: 15px;"></i>
+        <h4 style="color: #000; margin-bottom: 10px;">Final Assessment</h4>
+        <div style="font-size: 2.5rem; color: #ffd700; font-weight: bold;">{{ final }}/5</div>
+        <div class="progress mt-3" style="height: 10px;">
+          <div class="progress-bar" style="width: {{ (final / 5) * 100 }}%; background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your Reflection -->
+  <div class="mb-4" style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+    <h5 style="color: #000; margin-bottom: 15px;">
+      <i class="fas fa-lightbulb"></i> Your Learning Reflection
+    </h5>
+    <p style="color: #333; line-height: 1.6; font-style: italic;">{{ explanation }}</p>
+  </div>
+
+  <!-- Performance Chart -->
+  <div class="mb-4" style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+    <canvas id="performanceChart" height="120"></canvas>
+  </div>
+
+  <!-- Restart Button -->
+  <div class="text-center">
+    <a href="/" class="btn btn-primary btn-lg">
+      <i class="fas fa-redo"></i> Start New Learning Journey
+    </a>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const preScore = {{ pre }};
+  const finalScore = {{ final }};
+  const timeSpent = {{ time_spent }};
+
+  let performanceLabel = '';
+  let performanceColor = '';
+  
+  if (timeSpent >= 30 && finalScore >= preScore) {
+    performanceLabel = 'Excellent Progress!';
+    performanceColor = '#56ab2f';
+  } else if (timeSpent >= 15 && timeSpent < 30) {
+    performanceLabel = 'Good Effort!';
+    performanceColor = '#f093fb';
+  } else {
+    performanceLabel = 'Keep Learning!';
+    performanceColor = '#f5576c';
+  }
+
+  const ctx = document.getElementById('performanceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Pre-Assessment', 'Final Assessment', 'Time Spent (min)'],
+      datasets: [{
+        label: 'Your Performance',
+        data: [preScore, finalScore, timeSpent],
+        backgroundColor: [
+          'rgba(102, 126, 234, 0.8)',
+          'rgba(255, 215, 0, 0.8)',
+          'rgba(240, 147, 251, 0.8)'
+        ],
+        borderColor: [
+          'rgba(102, 126, 234, 1)',
+          'rgba(255, 215, 0, 1)',
+          'rgba(240, 147, 251, 1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: performanceLabel,
+          font: { size: 18, weight: 'bold' },
+          color: performanceColor
+        },
+        legend: { display: false }
+      },
+              scales: {
+          y: {
+            beginAtZero: true,
+            suggestedMax: 5,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              color: '#000'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              color: '#000'
+            }
+          }
+        }
+    }
+  });
+</script>
+{% endblock %}
