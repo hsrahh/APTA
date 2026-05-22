@@ -1,177 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}Pre-Assessment Quiz - {{ topic }}{% endblock %}
+{% block title %}Initial Quiz – {{ topic }}{% endblock %}
 {% block content %}
-<div class="glass-card">
-  <div class="text-center mb-4">
-    <i class="fas fa-clipboard-list" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
-    <h1 class="page-title">Pre-Assessment Quiz</h1>
-    <p class="page-subtitle">{{ topic }} - Let's see what you already know!</p>
-  </div>
+<div class="card">
+  <h4>📋 Initial Quiz: {{ topic }}</h4>
+  <p class="text-center text-muted mb-4">Answer all {{ questions|length }} questions, then click Continue</p>
 
-  <!-- Progress indicator -->
-  <div class="progress mb-4">
-    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-  </div>
-
-  <!-- Main Quiz Form -->
-  <form id="quizForm">
+  <form method="post" action="{{ url_for('quiz') }}" id="quizForm">
     {% for q in questions %}
     {% set question_index = loop.index0 %}
-    <div class="question-container mb-4" style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-      <div class="question-header mb-3">
-        <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Question {{ loop.index }}</span>
-      </div>
-      <label class="form-label mb-3" style="color: #000; font-size: 1.1rem; font-weight: 500;">
-        {{ q.question }}
-      </label>
+    <div class="question-box">
+      <label class="form-label mb-2"><strong>{{ loop.index }}. {{ q.question }}</strong></label>
       {% for opt in q.options %}
       {% set option_index = loop.index0 %}
-      <div class="form-check mb-2">
-        <input class="form-check-input"
-               type="radio"
-               name="q{{ question_index }}"
-               id="q{{ question_index }}-opt{{ option_index }}"
-               value="{{ opt }}"
-               required>
-        <label class="form-check-label" for="q{{ question_index }}-opt{{ option_index }}">
-          {{ opt }}
-        </label>
+      <div class="form-check mb-1">
+        <input class="form-check-input" type="radio" name="q{{ question_index }}"
+               id="q{{ question_index }}-opt{{ option_index }}" value="{{ opt }}" required>
+        <label class="form-check-label" for="q{{ question_index }}-opt{{ option_index }}">{{ opt }}</label>
       </div>
       {% endfor %}
     </div>
     {% endfor %}
-
-    <div class="text-center mt-4">
-      <button type="button" class="btn btn-primary btn-lg" onclick="calculateAndShowScore()">
-        <i class="fas fa-check-circle"></i> Submit Quiz
-      </button>
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-primary btn-lg">Submit & Continue →</button>
     </div>
-  </form>
-
-  <!-- Score Display -->
-  <div id="scoreDisplay" class="mt-4" style="display: none; background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-    <i class="fas fa-trophy" style="font-size: 3rem; color: #ffd700; margin-bottom: 20px;"></i>
-    <h3 style="color: #000; margin-bottom: 15px;">Quiz Complete!</h3>
-    <p style="color: #333; font-size: 1.2rem; margin-bottom: 20px;">
-      You scored <strong style="color: #ffd700; font-size: 1.5rem;"><span id="score"></span></strong> out of {{ questions|length }}
-    </p>
-    <div class="progress mb-3" style="height: 25px;">
-      <div class="progress-bar" id="scoreProgressBar" style="width: 0%"></div>
-    </div>
-    <button class="btn btn-success btn-lg" onclick="submitToBackend()">
-      <i class="fas fa-arrow-right"></i> Continue to Learning
-    </button>
-  </div>
-
-  <!-- Hidden form to actually POST to server -->
-  <form id="backendForm" method="post" action="{{ url_for('quiz') }}" style="display: none;">
-    {% for q in questions %}
-    {% set question_index = loop.index0 %}
-    <input type="hidden" name="q{{ question_index }}" id="hidden-q{{ question_index }}">
-    {% endfor %}
   </form>
 </div>
-
-<script>
-  const correctAnswers = [
-    {% for q in questions %}
-      `{{ q.answer }}`{% if not loop.last %},{% endif %}
-    {% endfor %}
-  ];
-
-  // Update progress bar as user answers questions
-  function updateProgress() {
-    const totalQuestions = correctAnswers.length;
-    let answeredQuestions = 0;
-    
-    for (let i = 0; i < totalQuestions; i++) {
-      const selected = document.querySelector(`input[name="q${i}"]:checked`);
-      if (selected) {
-        answeredQuestions++;
-      }
-    }
-    
-    const progress = (answeredQuestions / totalQuestions) * 100;
-    document.getElementById('progressBar').style.width = progress + '%';
-  }
-
-  // Add event listeners to all radio buttons
-  document.addEventListener('DOMContentLoaded', function() {
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    radioButtons.forEach(function(radio) {
-      radio.addEventListener('change', updateProgress);
-    });
-  });
-
-  function calculateAndShowScore() {
-    let score = 0;
-    const total = correctAnswers.length;
-
-    // Reset all answer colors first
-    for (let i = 0; i < total; i++) {
-      const options = document.querySelectorAll(`input[name="q${i}"]`);
-      options.forEach(option => {
-        const label = document.querySelector(`label[for="${option.id}"]`);
-        if (label) {
-          label.style.color = '#000';
-          label.style.fontWeight = 'normal';
-        }
-      });
-    }
-
-    for (let i = 0; i < total; i++) {
-      const selected = document.querySelector(`input[name="q${i}"]:checked`);
-      if (selected) {
-        // Fill hidden input for backend
-        document.getElementById(`hidden-q${i}`).value = selected.value;
-        
-        // Color the selected answer
-        const selectedLabel = document.querySelector(`label[for="${selected.id}"]`);
-        if (selectedLabel) {
-          if (selected.value === correctAnswers[i]) {
-            // Correct answer - green
-            selectedLabel.style.color = '#28a745';
-            selectedLabel.style.fontWeight = 'bold';
-            score++;
-          } else {
-            // Wrong answer - red
-            selectedLabel.style.color = '#dc3545';
-            selectedLabel.style.fontWeight = 'bold';
-            
-            // Also show the correct answer in green
-            const correctOption = document.querySelector(`input[name="q${i}"][value="${correctAnswers[i]}"]`);
-            if (correctOption) {
-              const correctLabel = document.querySelector(`label[for="${correctOption.id}"]`);
-              if (correctLabel) {
-                correctLabel.style.color = '#28a745';
-                correctLabel.style.fontWeight = 'bold';
-              }
-            }
-          }
-        }
-      } else {
-        // If no answer selected, show correct answer in green
-        const correctOption = document.querySelector(`input[name="q${i}"][value="${correctAnswers[i]}"]`);
-        if (correctOption) {
-          const correctLabel = document.querySelector(`label[for="${correctOption.id}"]`);
-          if (correctLabel) {
-            correctLabel.style.color = '#28a745';
-            correctLabel.style.fontWeight = 'bold';
-          }
-        }
-      }
-    }
-
-    document.getElementById('score').textContent = score;
-    const scorePercentage = (score / total) * 100;
-    document.getElementById('scoreProgressBar').style.width = scorePercentage + '%';
-    
-    document.getElementById('scoreDisplay').style.display = 'block';
-    document.getElementById('scoreDisplay').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function submitToBackend() {
-    document.getElementById('backendForm').submit();
-  }
-</script>
 {% endblock %}

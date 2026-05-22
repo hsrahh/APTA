@@ -1,45 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}AI Python Tutor - Chat{% endblock %}
-
+{% block title %}AI Study – {{ topic }}{% endblock %}
 {% block content %}
-<div class="glass-card position-relative">
-  <!-- Floating Timer -->
-  <div id="chat-timer" style="position: absolute; top: 20px; right: 20px; background: rgba(0, 0, 0, 0.3); color: white; padding: 10px 15px; border-radius: 15px; font-weight: 600; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-    <i class="fas fa-clock"></i> Time: <span id="time-spent">00:00:00</span>
+<div class="card position-relative">
+  <div id="chat-timer" style="position:absolute;top:12px;right:16px;background:#1565c0;color:#fff;padding:6px 14px;border-radius:8px;font-weight:600;font-size:13px;">
+    ⏱ <span id="time-spent">00:00:00</span>
   </div>
 
-  <!-- Chat Header -->
-  <div class="text-center mb-4">
-    <i class="fas fa-robot" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
-    <h1 class="page-title">AI Personal Tutor</h1>
-    <p class="page-subtitle">Ask me anything!</p>
+  <h4 class="mb-2">💬 Study with AI Tutor</h4>
+  <p class="text-center text-muted mb-2">
+    Topic: <strong>{{ topic }}</strong> &nbsp;|&nbsp; Student: <strong>{{ name }}</strong>
+  </p>
+  {% if not ai_ready %}
+  <p class="text-center small mb-3" style="color:#e65100;">
+    Using built-in knowledge tutor (OpenAI key missing or invalid). Answers still work for your demo.
+  </p>
+  {% else %}
+  <p class="text-center small text-muted mb-3">Powered by OpenAI GPT. Ask anything about <strong>{{ topic }}</strong>.</p>
+  {% endif %}
+
+  <div id="chat-box" style="height:360px;overflow-y:auto;padding:15px;border-radius:12px;margin-bottom:16px;">
+    <div class="chat-ai mb-2"><b>AI Tutor:</b> Hello {{ name }}! Ask me anything about <strong>{{ topic }}</strong>.</div>
   </div>
 
-  <!-- Chat Container -->
-  <div class="chat-container" id="chat-box">
-    <div class="chat-message bot">
-      <div class="message-bubble bot">
-        <i class="fas fa-robot" style="margin-right: 8px;"></i>
-        Hello! I'm your AI Personal tutor. Ask me any questions about programming, and I'll help you learn! 🐍✨
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat Input -->
   <div class="input-group mb-4">
-    <input type="text" id="user-msg" class="form-control" placeholder="Type your question here..." autocomplete="off" />
-    <button id="send-btn" class="btn btn-primary">
-      <i class="fas fa-paper-plane"></i> Send
-    </button>
+    <input type="text" id="user-msg" class="form-control" placeholder="Ask about {{ topic }}..." autocomplete="off" />
+    <button type="submit" id="send-btn" class="btn btn-primary">Send</button>
   </div>
 
-  <!-- Done Button -->
-  <form id="doneForm" action="/final_quiz" method="POST">
+  <form id="doneForm" action="{{ url_for('final_quiz') }}" method="POST">
     <input type="hidden" name="chat_time" id="chatTimeField" />
     <div class="text-center">
-      <button type="submit" class="btn btn-success btn-lg">
-        <i class="fas fa-check-circle"></i> Done Learning – Take Final Quiz
-      </button>
+      <button type="submit" class="btn btn-success btn-lg">✅ Done Studying – Take Final Quiz</button>
     </div>
   </form>
 </div>
@@ -48,13 +39,20 @@
   const chatBox = document.getElementById("chat-box");
   const input = document.getElementById("user-msg");
   const sendBtn = document.getElementById("send-btn");
+  const CHAT_URL = "{{ url_for('chat_api') }}";
 
-  // Scroll to bottom of chat
-  const scrollToBottom = () => {
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
+  function escapeHtml(text) {
+    const d = document.createElement("div");
+    d.textContent = text;
+    return d.innerHTML;
+  }
 
-  // Timer Logic
+  function formatReply(text) {
+    return escapeHtml(text).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/_(.*?)_/g, "<em>$1</em>").replace(/\n/g, "<br>");
+  }
+
+  const scrollToBottom = () => { chatBox.scrollTop = chatBox.scrollHeight; };
+
   let seconds = 0;
   setInterval(() => {
     seconds++;
@@ -64,78 +62,60 @@
     document.getElementById("time-spent").textContent = `${hrs}:${mins}:${secs}`;
   }, 1000);
 
-  // Add message to chat
-  function addMessage(message, isUser = false) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
-    
-    const bubbleDiv = document.createElement('div');
-    bubbleDiv.className = `message-bubble ${isUser ? 'user' : 'bot'}`;
-    
-    if (isUser) {
-      bubbleDiv.innerHTML = `<i class="fas fa-user" style="margin-right: 8px;"></i>${message}`;
-    } else {
-      bubbleDiv.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i>${message}`;
-    }
-    
-    messageDiv.appendChild(bubbleDiv);
-    chatBox.appendChild(messageDiv);
-    scrollToBottom();
-  }
-
-  // Chat Send Button
-  sendBtn.onclick = async () => {
+  async function sendMessage() {
     const msg = input.value.trim();
     if (!msg) return;
-    
-    addMessage(msg, true);
+
+    chatBox.innerHTML += `<div class="chat-user mb-2"><b>You:</b> ${escapeHtml(msg)}</div>`;
     input.value = "";
-    
-    // Show loading indicator
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'chat-message bot';
-    loadingDiv.innerHTML = '<div class="message-bubble bot"><div class="loading"></div> AI is thinking...</div>';
-    chatBox.appendChild(loadingDiv);
+    scrollToBottom();
+    sendBtn.disabled = true;
+
+    const thinking = document.createElement("div");
+    thinking.className = "chat-ai mb-2";
+    thinking.innerHTML = "<b>AI:</b> <em>Thinking...</em>";
+    chatBox.appendChild(thinking);
     scrollToBottom();
 
     try {
-      const res = await fetch("/chat_api", {
+      const res = await fetch(CHAT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ message: msg })
       });
-      const data = await res.json();
-      
-      // Remove loading indicator
-      chatBox.removeChild(loadingDiv);
-      
-      // Add AI response
-      addMessage(data.response, false);
-    } catch (error) {
-      // Remove loading indicator
-      chatBox.removeChild(loadingDiv);
-      
-      // Add error message
-      addMessage("Sorry, I'm having trouble connecting right now. Please try again!", false);
-    }
-  };
 
-  // Enter = Send
-  input.addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendBtn.click();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(text.slice(0, 200) || `Server error (${res.status}). Restart: python app.py`);
+      }
+
+      thinking.remove();
+
+      if (!res.ok || data.error) {
+        chatBox.innerHTML += `<div class="chat-error mb-2"><b>Error:</b> ${escapeHtml(data.error || "Request failed (" + res.status + ")")}</div>`;
+      } else {
+        chatBox.innerHTML += `<div class="chat-ai mb-2"><b>AI:</b> ${formatReply(data.response)}</div>`;
+      }
+    } catch (err) {
+      thinking.remove();
+      chatBox.innerHTML += `<div class="chat-error mb-2"><b>Error:</b> ${escapeHtml(err.message || "Could not reach server. Run python app.py and open http://127.0.0.1:5000")}</div>`;
     }
+
+    sendBtn.disabled = false;
+    scrollToBottom();
+  }
+
+  sendBtn.onclick = (e) => { e.preventDefault(); sendMessage(); };
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
   });
 
-  // Capture Timer on Form Submit
-  document.getElementById("doneForm").addEventListener("submit", function () {
+  document.getElementById("doneForm").addEventListener("submit", () => {
     document.getElementById("chatTimeField").value = seconds;
-  });
-
-  // Focus on input when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    input.focus();
   });
 </script>
 {% endblock %}

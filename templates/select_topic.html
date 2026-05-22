@@ -1,50 +1,23 @@
-```
 {% extends 'base.html' %}
-{% block title %}Choose Your Topic - AI Python Tutor{% endblock %}
+{% block title %}Select Topic – APTA{% endblock %}
 {% block content %}
-<div class="glass-card">
-  <div class="text-center mb-4">
-    <i class="fas fa-book-open" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
-    <h1 class="page-title">Choose Your Learning Topic</h1>
-    <p class="page-subtitle">Select a Python topic to begin your personalized learning journey</p>
-  </div>
-  
+<div class="card mx-auto">
+  <h3>🎯 Select a Topic</h3>
+  <p class="text-center text-muted mb-4">Choose the topic you want to learn today</p>
+  {% if error %}
+  <div class="alert alert-danger py-2">{{ error }}</div>
+  {% endif %}
   <form method="post">
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-graduation-cap"></i> Learning Topic
-      </label>
-      <select name="topic" class="form-select" required>
-        <option value="" disabled selected>Select a topic to learn...</option>
+    <div class="mb-4">
+      <label for="topicSelect" class="form-label fw-semibold">Topic</label>
+      <select name="topic" id="topicSelect" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Choose a topic...</option>
         {% for topic in topics %}
-          <option value="{{ topic }}">{{ topic }}</option>
+        <option value="{{ topic }}">{{ topic }}</option>
         {% endfor %}
       </select>
     </div>
-    
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary btn-lg">
-        <i class="fas fa-play"></i> Start Pre-Assessment Quiz
-      </button>
-    </div>
+    <button type="submit" class="btn btn-primary w-100 btn-lg">Start Initial Quiz →</button>
   </form>
-  
-  <div class="mt-4">
-    <div class="row">
-      <div class="col-md-4 text-center">
-        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
-        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">Pre-Assessment</p>
-      </div>
-      <div class="col-md-4 text-center">
-        <i class="fas fa-comments" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
-        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">AI Tutoring</p>
-      </div>
-      <div class="col-md-4 text-center">
-        <i class="fas fa-chart-line" style="font-size: 2rem; color: rgba(255, 255, 255, 0.7);"></i>
-        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 10px;">Final Assessment</p>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}
-```

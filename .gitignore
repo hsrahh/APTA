@@ -1,0 +1,29 @@
+# Secrets – never commit API keys
+.env
+.env.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Local database and generated files
+knowledge.db
+vector.index
+data/vector.index
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large ML caches (optional)
+.cache/

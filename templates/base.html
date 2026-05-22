@@ -1,455 +1,230 @@
-```
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}AI Personal Tutor{% endblock %}</title>
+  <title>{% block title %}APTA – AI Personal Tutor{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --apta-blue: #1565c0;
+      --apta-blue-dark: #0d47a1;
+      --apta-blue-light: #e3f2fd;
+      --apta-white: #ffffff;
+      --apta-text: #1a237e;
+      --apta-muted: #5c6bc0;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--apta-blue-light) 0%, var(--apta-white) 50%, #bbdefb 100%);
+      color: var(--apta-text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
     }
 
-    /* Animated background particles */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
+    .apta-header {
+      background: linear-gradient(90deg, var(--apta-blue-dark), var(--apta-blue));
+      color: var(--apta-white);
+      padding: 14px 0;
+      box-shadow: 0 2px 12px rgba(13, 71, 161, 0.25);
     }
 
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      animation: float 6s ease-in-out infinite;
+    .apta-header h1 {
+      font-size: 1.35rem;
+      margin: 0;
+      font-weight: 700;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(180deg); }
+    .apta-header p {
+      margin: 0;
+      font-size: 0.85rem;
+      opacity: 0.9;
     }
 
-    /* Main container */
-    .main-container {
-      min-height: 100vh;
+    .step-bar {
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
       justify-content: center;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
+      margin-bottom: 1.5rem;
     }
 
-    /* Glass morphism card */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 0, 0, 0.1);
+    .step-item {
+      font-size: 0.72rem;
+      padding: 4px 10px;
       border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-      max-width: 600px;
+      background: #e8eaf6;
+      color: var(--apta-muted);
+      font-weight: 600;
+    }
+
+    .step-item.active {
+      background: var(--apta-blue);
+      color: var(--apta-white);
+    }
+
+    .step-item.done {
+      background: #c8e6c9;
+      color: #2e7d32;
+    }
+
+    .container-main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    .card {
+      background: var(--apta-white);
+      border: 1px solid #90caf9;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(21, 101, 192, 0.12);
+      padding: 28px;
       width: 100%;
-      animation: slideInUp 0.8s ease-out;
-      position: relative;
-      overflow: hidden;
     }
 
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      animation: shimmer 3s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Typography */
-    .page-title {
-      color: #000;
-      font-size: 2.5rem;
+    .card h3, .card h4 {
+      color: var(--apta-blue-dark);
       font-weight: 700;
       text-align: center;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
-      animation: fadeInDown 1s ease-out;
+      margin-bottom: 1.25rem;
     }
 
-    .page-subtitle {
-      color: #333;
-      font-size: 1.1rem;
-      text-align: center;
-      margin-bottom: 30px;
-      animation: fadeInUp 1s ease-out 0.3s both;
+    .form-control, .form-select, textarea.form-control {
+      background: var(--apta-white);
+      border: 2px solid #90caf9;
+      color: var(--apta-text);
+      border-radius: 10px;
+      padding: 10px 14px;
     }
 
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Form elements */
-    .form-group {
-      margin-bottom: 25px;
-      animation: fadeInUp 1s ease-out 0.5s both;
-    }
-
-    .form-label {
-      color: #000;
-      font-weight: 500;
-      margin-bottom: 8px;
-      display: block;
-      font-size: 0.95rem;
-    }
-
-    .form-control, .form-select {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      color: #000;
-      padding: 12px 16px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
+    .form-control:focus, .form-select:focus, textarea.form-control:focus {
+      border-color: var(--apta-blue);
+      box-shadow: 0 0 0 0.2rem rgba(21, 101, 192, 0.2);
     }
 
     .form-control::placeholder {
-      color: rgba(0, 0, 0, 0.6);
-    }
-
-    .form-control:focus, .form-select:focus {
-      background: rgba(255, 255, 255, 1);
-      border-color: rgba(0, 0, 0, 0.5);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-      color: #000;
-      outline: none;
-    }
-
-    /* Buttons */
-    .btn {
-      border-radius: 12px;
-      padding: 12px 30px;
-      font-weight: 600;
-      font-size: 1rem;
-      border: none;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .btn:hover::before {
-      left: 100%;
+      color: #7986cb;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(90deg, var(--apta-blue), var(--apta-blue-dark));
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-weight: 600;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-      color: white;
+      background: linear-gradient(90deg, var(--apta-blue-dark), #082a5e);
+      transform: translateY(-1px);
     }
 
     .btn-success {
-      background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4);
+      background: #2e7d32;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
     }
 
     .btn-success:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(86, 171, 47, 0.6);
-      color: white;
+      background: #1b5e20;
     }
 
-    .btn-warning {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-    }
-
-    .btn-warning:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
-      color: white;
-    }
-
-    /* Radio buttons and checkboxes */
-    .form-check {
-      margin-bottom: 15px;
-      animation: fadeInUp 1s ease-out 0.7s both;
-    }
-
-    .form-check-input {
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .form-check-input:checked {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-color: rgba(0, 0, 0, 0.5);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    .question-box {
+      background: var(--apta-blue-light);
+      border: 1px solid #90caf9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
     }
 
     .form-check-label {
-      color: #000;
-      font-weight: 500;
-      margin-left: 10px;
-      cursor: pointer;
+      color: var(--apta-text);
     }
 
-    /* List groups */
-    .list-group-item {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.2);
+    .form-check-input:checked {
+      background-color: var(--apta-blue);
+      border-color: var(--apta-blue);
+    }
+
+    .alert-info-custom {
+      background: var(--apta-blue-light);
+      border: 1px solid #64b5f6;
+      color: var(--apta-blue-dark);
       border-radius: 12px;
-      margin-bottom: 10px;
-      color: #000;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
+      padding: 16px;
     }
 
-    .list-group-item:hover {
-      background: rgba(255, 255, 255, 1);
-      transform: translateX(5px);
+    .list-group-item {
+      background: var(--apta-white);
+      border: 1px solid #e3f2fd;
+      color: var(--apta-text);
+      margin-bottom: 8px;
+      border-radius: 10px !important;
     }
 
-    /* Progress bars */
-    .progress {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      height: 20px;
-      overflow: hidden;
-      margin: 20px 0;
+    .badge-score {
+      background: var(--apta-blue) !important;
+      font-size: 0.95rem;
+      padding: 6px 12px;
     }
 
-    .progress-bar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 10px;
-      transition: width 1s ease;
+    .explanation-box {
+      background: var(--apta-blue-light);
+      border-left: 4px solid var(--apta-blue);
+      padding: 12px;
+      border-radius: 8px;
+      color: var(--apta-text);
     }
 
-    /* Chat interface */
-    .chat-container {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      padding: 20px;
-      height: 400px;
-      overflow-y: auto;
+    #chat-box {
+      background: #f5f9ff !important;
+      border: 2px solid #90caf9 !important;
+      color: var(--apta-text) !important;
+    }
+
+    .chat-user { color: var(--apta-blue-dark); }
+    .chat-ai { color: #2e7d32; }
+    .chat-error { color: #c62828; }
+
+    .perf-banner {
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      font-weight: 600;
       margin-bottom: 20px;
-      backdrop-filter: blur(10px);
     }
 
-    .chat-message {
-      margin-bottom: 15px;
-      animation: slideInLeft 0.5s ease-out;
-    }
-
-    .chat-message.user {
-      text-align: right;
-    }
-
-    .chat-message.bot {
-      text-align: left;
-    }
-
-    .message-bubble {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 18px;
-      max-width: 80%;
-      word-wrap: break-word;
-    }
-
-    .message-bubble.user {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .message-bubble.bot {
-      background: rgba(0, 0, 0, 0.1);
-      color: #000;
-    }
-
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    /* Loading animation */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      border-top-color: #000;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .glass-card {
-        padding: 30px 20px;
-        margin: 10px;
-      }
-      
-      .page-title {
-        font-size: 2rem;
-      }
-      
-      .btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-      }
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.5);
-    }
+    .perf-banner.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .perf-banner.primary { background: #e3f2fd; color: var(--apta-blue-dark); border: 1px solid #90caf9; }
+    .perf-banner.info { background: #e1f5fe; color: #0277bd; border: 1px solid #81d4fa; }
+    .perf-banner.warning { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .perf-banner.secondary { background: #eceff1; color: #455a64; border: 1px solid #b0bec5; }
   </style>
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <!-- Animated background particles -->
-  <div class="particles" id="particles"></div>
-  
-  <div class="main-container">
+  <header class="apta-header text-center">
+    <div class="container">
+      <h1>🧠 APTA – AI Personal Tutor</h1>
+      <p>Assess · Learn · Improve · Track Performance</p>
+    </div>
+  </header>
+
+  <div class="container-main">
+    {% if step is defined %}
+    <div class="step-bar">
+      <span class="step-item {% if step == 1 %}active{% elif step > 1 %}done{% endif %}">1. Login</span>
+      <span class="step-item {% if step == 2 %}active{% elif step > 2 %}done{% endif %}">2. Topic</span>
+      <span class="step-item {% if step == 3 %}active{% elif step > 3 %}done{% endif %}">3. Quiz</span>
+      <span class="step-item {% if step == 4 %}active{% elif step > 4 %}done{% endif %}">4. Reflect</span>
+      <span class="step-item {% if step == 5 %}active{% elif step > 5 %}done{% endif %}">5. AI Study</span>
+      <span class="step-item {% if step == 6 %}active{% elif step > 6 %}done{% endif %}">6. Final Quiz</span>
+      <span class="step-item {% if step == 7 %}active{% endif %}">7. Dashboard</span>
+    </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </div>
-
-  <script>
-    // Create animated particles
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      const particleCount = 50;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Random size
-        const size = Math.random() * 4 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        
-        // Random position
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        
-        // Random animation delay
-        particle.style.animationDelay = Math.random() * 6 + 's';
-        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-        
-        particlesContainer.appendChild(particle);
-      }
-    }
-
-    // Initialize particles when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      createParticles();
-      
-      // Add entrance animations to form elements
-      const formElements = document.querySelectorAll('.form-group, .btn');
-      formElements.forEach((element, index) => {
-        element.style.animationDelay = (index * 0.1) + 's';
-      });
-    });
-  </script>
 </body>
 </html>
-```

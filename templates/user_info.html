@@ -1,53 +1,35 @@
-```
 {% extends 'base.html' %}
-{% block title %}Welcome - AI Python Tutor{% endblock %}
+{% block title %}Login – APTA{% endblock %}
 {% block content %}
-<div class="glass-card">
-  <div class="text-center mb-4">
-    <i class="fas fa-user-circle" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
-    <h1 class="page-title">Welcome to AI Personal Tutor</h1>
-    <p class="page-subtitle">Let's get to know you better to personalize your learning experience</p>
-  </div>
-  
+<div class="card mx-auto">
+  <h3>🔐 Student Login</h3>
+  <p class="text-center text-muted mb-4">Enter your details to start your learning session</p>
   <form method="post">
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-id-card"></i> Reference ID
-      </label>
-      <input name="ref_id" class="form-control" placeholder="Enter your reference ID" required>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Reference ID</label>
+      <input name="ref_id" class="form-control form-control-lg" placeholder="e.g. DIP001" required>
     </div>
-    
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-user"></i> Full Name
-      </label>
-      <input name="name" class="form-control" placeholder="Enter your full name" required>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Your Name</label>
+      <input name="name" class="form-control form-control-lg" placeholder="Full name" required>
     </div>
-    
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-venus-mars"></i> Gender
-      </label>
-      <select name="gender" class="form-select" required>
-        <option value="" disabled selected>Choose your gender</option>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Gender</label>
+      <select name="gender" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Select gender</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
+        <option value="other">Other</option>
       </select>
     </div>
-    
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-birthday-cake"></i> Age
-      </label>
-      <input name="age" type="number" min="18" max="27" class="form-control" placeholder="Enter your age (18-27)" required>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Age</label>
+      <input name="age" type="number" min="16" max="60" class="form-control form-control-lg" placeholder="Your age" required>
     </div>
-    
-    <div class="form-group">
-      <label class="form-label">
-        <i class="fas fa-briefcase"></i> Profession
-      </label>
-      <select name="profession" class="form-select" required>
-        <option value="" disabled selected>Select your profession</option>
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Profession</label>
+      <select name="profession" class="form-select form-select-lg" required>
+        <option value="" disabled selected>Select profession</option>
         <option value="student">Student</option>
         <option value="IT employee">IT Employee</option>
         <option value="finance employee">Finance Employee</option>
@@ -55,13 +37,7 @@
         <option value="software developer">Software Developer</option>
       </select>
     </div>
-    
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary btn-lg">
-        <i class="fas fa-arrow-right"></i> Start Learning Journey
-      </button>
-    </div>
+    <button type="submit" class="btn btn-primary w-100 btn-lg">Login & Continue →</button>
   </form>
 </div>
 {% endblock %}
-```

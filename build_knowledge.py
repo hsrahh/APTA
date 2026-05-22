@@ -8,6 +8,6 @@ with open("data/knowledge_base.txt", "r", encoding="utf-8") as f:
 chunks = [chunk.strip() for chunk in text.split("\n\n") if chunk.strip()]
 
 # Build and save index
-build_index(chunks, save_path="data/vector.index")
+build_index(chunks, save_path="vector.index")
 
 print("✅ Vector index built successfully!")
